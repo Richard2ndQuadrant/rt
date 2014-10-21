@@ -1,19 +1,18 @@
-function filter_cascade_by_id (id, vals, is_hierarchical) {
+function filter_cascade_by_id (id, vals) {
     var element = document.getElementById(id);
     if (!element) { return };
 
     if ( element.tagName == 'SELECT' ) {
         var complete_select = document.getElementById(id + "-Complete" );
-        return filter_cascade_select(element, complete_select, vals, is_hierarchical);
+        return filter_cascade_select(element, complete_select, vals );
     }
     else {
         if ( !( vals instanceof Array ) ) {
             vals = [vals];
         }
 
-        if ( is_hierarchical && (vals.length == 0 || (vals.length == 1 && vals[0] == '')) ) {
-            // no category, and the category is from a hierchical cf;
-            // leave it empty
+        if ( vals.length == 0 || (vals.length == 1 && vals[0] == '') ) {
+            // no category, leave it empty
             jQuery(element).find('div').hide();
         }
         else {
@@ -27,7 +26,7 @@ function filter_cascade_by_id (id, vals, is_hierarchical) {
     }
 }
 
-function filter_cascade_select (select, complete_select, vals, is_hierarchical) {
+function filter_cascade_select (select, complete_select, vals) {
     if ( !( vals instanceof Array ) ) {
         vals = [vals];
     }
@@ -45,13 +44,8 @@ function filter_cascade_select (select, complete_select, vals, is_hierarchical) 
         var cloned_empty_label;
         for ( var j = 0; j < vals.length; j++ ) {
             var val = vals[j];
-            if ( val == '' && is_hierarchical ) {
-                // no category, and the category is from a hierchical cf;
-                // leave this set of options empty
-            } else if ( val == '' ) {
-                // no category, let's clone all node
-                jQuery(select).append(jQuery(complete_children).clone());
-                break;
+            if ( val == '' ) {
+                // no category, leave this set of options empty
             }
             else {
                 var labels_to_clone = {};
@@ -90,7 +84,7 @@ function filter_cascade_select (select, complete_select, vals, is_hierarchical) 
 // for back compatibility
         for (i = 0; i < children.length; i++) {
             if (!children[i].label) { continue };
-            if ( val == '' && is_hierarchical ) {
+            if ( val == '' ) {
                 hide(children[i]);
                 continue;
             }
